@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Detecção e Análise</title>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col items-center min-h-screen p-4 sm:p-6">
+
+    <h1 class="text-3xl md:text-4xl font-bold text-indigo-600 my-6 text-center">
+        Detecção e Análise com IA
+    </h1>
+
+    <div class="w-full max-w-7xl flex flex-col md:flex-row gap-6">
+
+        <div class="flex-1 bg-white p-6 rounded-xl shadow-lg flex flex-col">
+            <h2 class="text-xl font-semibold border-b border-slate-200 pb-3 mb-4">
+                Preview da Câmera
+            </h2>
+            <img id="video-feed" src="" alt="Video Feed" class="w-full rounded-lg bg-black aspect-video min-h-[350px]">
+            <button id="extract-btn" class="mt-6 w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-opacity-75 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed">
+                Extrair Dados dos Materiais
+            </button>
+        </div>
+
+        <div class="flex-1 bg-white p-6 rounded-xl shadow-lg flex flex-col">
+            <h2 class="text-xl font-semibold border-b border-slate-200 pb-3 mb-4">
+                Atributos Extraídos
+            </h2>
+            <pre id="results" class="flex-grow bg-slate-100 p-4 rounded-md text-sm text-slate-700 overflow-y-auto whitespace-pre-wrap break-words min-h-[250px]">Aguardando análise...</pre>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

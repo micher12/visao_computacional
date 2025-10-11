@@ -1,0 +1,7 @@
+pywebview
+opencv-python
+ultralytics
+pygame
+python-dotenv
+google-generativeai
+Pillow
