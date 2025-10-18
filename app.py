@@ -27,14 +27,15 @@ genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-2.5-flash')
 
 
-yolo_model = YOLO('./best.pt')
+yolo_model = YOLO('best_with_hat.pt')
 
 
 # Inicia o Pygame, tocar som de alerta
 pygame.mixer.init()
 warning_sound = "alert.wav"
 
-WARNING_CLASSES = {5, 7, 8, 9, 10}
+WARNING_CLASSES = {1, 2, 5}
+FOCUS_CLASSS = {4, 0}
 
 class Api:
     def __init__(self):
@@ -56,10 +57,20 @@ class Api:
             if not success:
                 print("Fim do fluxo de vídeo.")
                 break
+        
+            # lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+            # l, a, b = cv2.split(lab)
+            # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+            # clahe_l = clahe.apply(l)
+            # eq = cv2.equalizeHist(l)
+            # updated_lab = cv2.merge((eq,a,b))
+            # merged = cv2.cvtColor(updated_lab, cv2.COLOR_LAB2BGR)
+            # suave = cv2.GaussianBlur(merged, (7, 7), 0)
+            # frame = cv2.bilateralFilter(frame, 9, 75, 75)
 
             self.latest_frame = frame.copy()
             
-            frame_tem_warning = False
+            frame_tem_warning = False   
             
             # Realiza a detecção YOLO
             results = yolo_model(frame, stream=True, verbose=False)
@@ -74,7 +85,7 @@ class Api:
                     cls = int(box.cls[0])
                     class_name = yolo_model.names[cls]
 
-                    if cls == 6: # Classe pessoa.
+                    if cls not in FOCUS_CLASSS and cls not in WARNING_CLASSES: # Ignora classes irrelevantes.
                         continue
 
                     if cls in WARNING_CLASSES:
@@ -84,6 +95,8 @@ class Api:
                         cor_caixa = (0, 255, 0) # Verde
 
                     cv2.rectangle(frame, (x1, y1), (x2, y2), cor_caixa, 2)
+                    if(cls == 5): # Transforma Hat em No-Hardhat
+                        class_name = "NO-Hardhat"
                     label = f"{class_name} {conf:.2f}"
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, cor_caixa, 2)
             
