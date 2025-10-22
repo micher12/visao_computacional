@@ -34,7 +34,7 @@ yolo_model = YOLO('bestv2.pt')
 pygame.mixer.init()
 warning_sound = "alert.wav"
 
-WARNING_CLASSES = {1, 2}
+WARNING_CLASSES = {1, 2, 5}
 FOCUS_CLASSS = {4, 0}
 
 class Api:
@@ -85,13 +85,15 @@ class Api:
                     cls = int(box.cls[0])
                     class_name = yolo_model.names[cls]
 
-                    if cls not in FOCUS_CLASSS and cls not in WARNING_CLASSES: # Ignora classes irrelevantes. "people" e "hat"
+                    if cls not in FOCUS_CLASSS and cls not in WARNING_CLASSES: # Ignora classes irrelevantes.
                         continue
                     
                     if(cls == 1 and conf < 0.35):
                         continue
 
                     if cls in WARNING_CLASSES:
+                        if(cls == 5):
+                            class_name = "NO-Hardhat"
                         frame_tem_warning = True
                         cor_caixa = (0, 0, 255) # Vermelho
                     else:
