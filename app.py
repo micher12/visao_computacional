@@ -5,6 +5,7 @@ import threading
 import time
 import os
 import io
+import numpy as np
 
 from ultralytics import YOLO
 from dotenv import load_dotenv
@@ -27,7 +28,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-2.5-flash')
 
 
-yolo_model = YOLO('bestv2.pt')
+yolo_model = YOLO('best12n_v4.pt')
 
 
 # Inicia o Pygame, tocar som de alerta
@@ -60,13 +61,19 @@ class Api:
         
             # lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
             # l, a, b = cv2.split(lab)
-            # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-            # clahe_l = clahe.apply(l)
-            # eq = cv2.equalizeHist(l)
-            # updated_lab = cv2.merge((clahe_l,a,b))
-            # merged = cv2.cvtColor(updated_lab, cv2.COLOR_LAB2BGR)
-            # suave = cv2.GaussianBlur(frame, (5, 5), 0)
-            # frame = cv2.bilateralFilter(frame, 9, 75, 75)
+            # clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))  # Aumente clipLimit para mais contraste se necessário
+            # l_clahe = clahe.apply(l)
+            # lab_enhanced = cv2.merge((l_clahe, a, b))
+            # frame = cv2.cvtColor(lab_enhanced, cv2.COLOR_LAB2BGR)
+
+            # frame = cv2.GaussianBlur(frame, (3, 3), 0)  # Kernel menor para menos blur (era 5x5)
+            # frame = cv2.bilateralFilter(frame, d=9, sigmaColor=75, sigmaSpace=75)
+
+            # # Sharpening leve para realçar bordas
+            # kernel = np.array([[-1, -1, -1],
+            #                 [-1, 9, -1],
+            #                 [-1, -1, -1]])  # Kernel de sharpening básico
+            # frame = cv2.filter2D(frame, -1, kernel * 0.5)  # Multiplique por 0.3-0.7 para intensidade
 
             self.latest_frame = frame.copy()
             
@@ -88,12 +95,10 @@ class Api:
                     if cls not in FOCUS_CLASSS and cls not in WARNING_CLASSES: # Ignora classes irrelevantes.
                         continue
                     
-                    if(cls == 1 and conf < 0.35):
+                    if(cls == 1 and conf < 0.5):
                         continue
 
                     if cls in WARNING_CLASSES:
-                        if(cls == 5):
-                            class_name = "NO-Hardhat"
                         frame_tem_warning = True
                         cor_caixa = (0, 0, 255) # Vermelho
                     else:

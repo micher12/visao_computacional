@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-model = YOLO("best.pt")
+model = YOLO("best12n_v3.pt")
 
 
 if __name__ == '__main__':
@@ -8,6 +8,6 @@ if __name__ == '__main__':
         data="dataset/data.yaml",
         epochs=100,
         imgsz=640,
-        name='yolo11n_new',
+        name='yolo12n_v4',
         device="cuda",
     )
