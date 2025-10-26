@@ -28,7 +28,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-2.5-flash')
 
 
-yolo_model = YOLO('best12n_v4.pt')
+yolo_model = YOLO('best12n_v5.pt')
 
 
 # Inicia o Pygame, tocar som de alerta
@@ -93,9 +93,6 @@ class Api:
                     class_name = yolo_model.names[cls]
 
                     if cls not in FOCUS_CLASSS and cls not in WARNING_CLASSES: # Ignora classes irrelevantes.
-                        continue
-                    
-                    if(cls == 1 and conf < 0.5):
                         continue
 
                     if cls in WARNING_CLASSES:
